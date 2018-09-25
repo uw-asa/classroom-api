@@ -1,0 +1,15 @@
+RewriteEngine On
+
+#if the file actually exists, stop rewriting, but pass through to any Alias, Redirect directives, etc
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^(.+)$ - [PT,L]
+
+#If a php script exists, use that
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^ %{REQUEST_URI}.php [L]
+
+#RewriteBase /classroom/
+
+#direct json requests to equivalent php file
+RewriteRule ^(.*).json$ $1.php [L,QSA]
