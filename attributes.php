@@ -4,34 +4,36 @@ include('../misc.php');
 
 include('r25.php');
 
-#Get all features in all generally-assignable classrooms
+#Get all custom attributes in all generally-assignable classrooms
 $query = array(
                'category_id' => '384', # Type - 110 - General Classroom (Central Assignment), Campus - Seattle -- Upper Campus
                'scope' => 'extended',
-               'include' => 'features',
+               'include' => 'attributes',
                );
 
 $spaces = r25_get('spaces', $query, 86400);
 
-$features = array();
+#dprint_r($spaces, true);
+
+$attributes = array();
 foreach ($spaces as $space) {
-    foreach ($space->feature as $featureObj) {
-        $id = (int)$featureObj->feature_id;
-        if (isset($features[$id]))
+    foreach ($space->custom_attribute as $attributeObj) {
+        $id = (int)$attributeObj->attribute_id;
+        if (isset($attributes[$id]))
             continue;
 
-        $features[$id] = array_merge((array)$featureObj, r25_decode_feature_name((string)$featureObj->feature_name));
+        $attributes[$id] = (array)$attributeObj;
     }
 }
 
-array_multisort(array_column($features, 'category'), SORT_ASC, SORT_NATURAL,
-                array_column($features, 'display_name'), SORT_ASC, SORT_NATURAL,
-                $features);
+#array_multisort(array_column($attributes, 'category'), SORT_ASC, SORT_NATURAL,
+#                array_column($attributes, 'display_name'), SORT_ASC, SORT_NATURAL,
+#                $attributes);
 
 
-dprint_r($features, true);
+dprint_r($attributes, true);
 
-echo json_encode($features);
+echo json_encode($attributes);
 
 if (! isset($_GET['debug']))
     exit();

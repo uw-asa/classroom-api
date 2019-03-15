@@ -89,6 +89,17 @@ function r25_decode_formal_name($longname)
 {
     preg_match('/(?P<campus>.+)- (?P<building>.+) (?P<number>[A-Z\d]{3,5})(\s+\((?P<name>.+)\))?/', $longname, $matches);
 
+    if (!array_key_exists('name', $matches))
+        $matches['name'] = null;
+
+    switch ($matches['building']) {
+    case 'Electrical Engineering Building':
+        $matches['building'] = 'Electrical and Computer Engineering Building';
+        break;
+    default:
+        break;
+    }
+
     return array('campus' => $matches['campus'],
                  'building' => $matches['building'],
                  'number' => $matches['number'],

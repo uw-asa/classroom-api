@@ -22,7 +22,7 @@ use UW\SpaceWS\Room;
 
 include '../uw_ws.php';
 
-#get building
+# get building
 try {
     /* Query the web services */
     $facility = Facility::fromFacilityCode($_GET['building']);
@@ -37,37 +37,86 @@ dprint_r($facility);
 $results['building_code'] = $facility->FacilityCode;
 $results['building_name'] = $facility->LongName;
 
+
+include('r25.php');
+
 #Get rooms:
-$rooms = Room::search("facility_number={$facility->FacilityNumber}&room_type=110");
 
-dprint_r($rooms);
+$query25 = array();
 
-if (count($rooms)) {
-    foreach ($rooms as $roomObj) {
+if ($_GET['building'] == 'EE1' || $_GET['building'] == 'EEB' || $_GET['building'] == 'ECE')
+    $_GET['building'] = 'EEB'; #r25 has old code
 
-        $room = $roomObj->Facility->FacilityCode.' '.$roomObj->RoomNumber;
-        $roomname = null; #$row['Name']
+$query25['short_name'] = $_GET['building'];
+
+if (!isset($_GET['inactive'])) {
+        $query25['category_id'] = '384'; # Campus - Seattle -- Upper Campus
+        $query25['formal_name'] = 'Seattle-';
+}
+
+$feature_ids = array();
+if (isset($_GET['feature'])) {
+    foreach(array_keys($_GET['feature']) as $feature_id)
+        $feature_ids[] = $feature_id;
+}
+
+
+$query25['feature_id'] = implode(',', $feature_ids);
+
+#$includes[] = 'categories';
+$includes[] = 'features';
+#$includes[] = 'attributes';
+
+$query25['scope'] = 'extended';
+$query25['include'] = implode('+', $includes);
+
+dprint_r($query25);
+
+$spaces = r25_get('spaces', $query25);
+
+dprint_r($spaces);
+
+if (count($spaces)) {
+    foreach ($spaces as $space) {
+        $nameInfo = r25_decode_formal_name((string)$space->formal_name);
+        $number = $nameInfo['number'];
+        $roomname = $nameInfo['name'];
+
+        try {
+            $roomObj = Room::fromFacilityCodeAndRoomNumber($facility->FacilityCode, $number);
+        } catch (Exception $e) {
+            header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+            include('error/404.php');
+            exit();
+        }
+
+        dprint(print_r($roomObj, true));
+
+
+        $room = $facility->FacilityCode . ' ' . $number;
+
 
         if ( $json ) {
 
-            $results['room_list'][$room]['building_code'] = $roomObj->Facility->FacilityCode;
-            #$results['room_list'][$room]['room_name'] = $roomObj['Name'];
-            $results['room_list'][$room]['room_number'] = $roomObj->RoomNumber;
-            $results['room_list'][$room]['room_capacity'] = $roomObj->Capacity;
+            $results['room_list'][$room]['building_code'] = $facility->FacilityCode;
+            $results['room_list'][$room]['room_name'] = $roomname;
+            $results['room_list'][$room]['room_number'] = $number;
+            $results['room_list'][$room]['room_capacity'] = (int)$space->max_capacity;
             $results['room_list'][$room]['room_type'] = ucfirst(strtolower($roomObj->Description));
             #$results['room_list'][$room]['room_notes'] = $row['Notes'];
+            #$results['room_list'][$room]['room_notes'] = $roomObj->RoomType->Code;
 
         } else {
 
             if (! isset($currentFloor)) {
-                $currentFloor = substr($roomObj->RoomNumber, 0, 1);
+                $currentFloor = substr($number, 0, 1);
             }
 
-            if (substr($roomObj->RoomNumber, 0, 1) != $currentFloor) {
-                $currentFloor = substr($roomObj->RoomNumber, 0, 1);
+            if (substr($number, 0, 1) != $currentFloor) {
+                $currentFloor = substr($number, 0, 1);
             }
 ?>
-  <option value="<?= $roomObj->RoomNumber ?>">
+  <option value="<?= $number ?>">
      <?= $room ?>
 <?php   if ($roomname): ?>
      (<?= $roomname ?>)

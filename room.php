@@ -80,7 +80,7 @@ $building = $space->Facility->FacilityCode;
 $number = $space->RoomNumber;
 
 $results['building_code'] = $building;
-$results['room_name'] = str_replace('Seattle- ', '', $nameInfo['name']);
+$results['room_name'] = $nameInfo['name'];
 $results['room_number'] = $number;
 $results['room_capacity'] = $space->Capacity;
 $results['room_type'] = ucfirst(strtolower($space->Description));
@@ -153,6 +153,8 @@ foreach($roomInfo25->feature as $featureObj) {
 
     $results['attribute_list'][$feature['category']][] = $attribute;
 }
+
+ksort($results['attribute_list']);
 
 foreach($roomInfo25->custom_attribute as $row) {
     $attribute = array(

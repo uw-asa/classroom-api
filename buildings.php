@@ -4,12 +4,6 @@ $json = isset($_GET['json']) && ($_GET['json'] || $_GET['json'] === '');
 
 include('../misc.php');
 
-require '../SpaceWS/vendor/autoload.php';
-use UW\SpaceWS\Facility;
-use UW\SpaceWS\Room;
-
-include '../uw_ws.php';
-
 include('r25.php');
 
 $query25 = array();
