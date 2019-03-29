@@ -16,8 +16,6 @@ if (count($args) > 1) {
 
 include('../misc.php');
 
-include('../pdf.php');
-
 include('r25.php');
 
 $image_dir = "/var/www/room-images";
