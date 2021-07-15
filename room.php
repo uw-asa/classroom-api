@@ -14,28 +14,28 @@ if (count($args) > 1) {
   $_GET['room'] = urldecode($args[1]);
 }
 
-include('../misc.php');
+include('misc.php');
 
 include('r25.php');
 
 $image_dir = "/var/www/room-images";
 
-require '../SpaceWS/vendor/autoload.php';
+require 'vendor/autoload.php';
 use UW\SpaceWS\Facility;
 use UW\SpaceWS\Room;
 
-include '../uw_ws.php';
+include '/usr/local/etc/uw_ws/config.php';
 
 if (isset($_GET['room'])) {
     list($building, $number) = explode(' ', $_GET['room']);
-    if ($building == 'EE1' || $building == 'EEB' || $building == 'ECE')
-        $building = 'ECE';
-
 } else {
     header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
     include('error/404.php');
     exit();
 }    
+
+if ($building == 'EE1' || $building == 'EEB' || $building == 'ECE')
+    $building = 'ECE';
 
 try {
     /* Query the web services */
@@ -48,31 +48,11 @@ try {
 
 dprint(print_r($space, true));
 
-
-if (isset($_GET['room'])) {
-    list($building, $number) = explode(' ', $_GET['room']);
-    if ($building == 'EE1' || $building == 'EEB' || $building == 'ECE')
-        $building = 'EEB';
-
-    $short_name = $building . ' ' . $number;
-} else {
-    header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-    include('error/404.php');
-    exit();
-}    
-
+$short_name = $building . ' ' . $number;
 $roomInfo25 = r25_get_space_by_short_name($short_name);
 dprint(print_r($roomInfo25, true));
 
 $nameInfo = r25_decode_formal_name((string)$roomInfo25->formal_name);
-
-if (isset($_GET['debug'])) {
-?>
-<form method="POST">
- <input type="submit" name="update_cache" value="Reload Cached Entries" />
-</form>
-<?php
-}
 
 $building = $space->Facility->FacilityCode;
 $number = $space->RoomNumber;
@@ -82,7 +62,9 @@ $results['room_name'] = $nameInfo['name'];
 $results['room_number'] = $number;
 $results['room_capacity'] = $space->Capacity;
 $results['room_type'] = ucfirst(strtolower($space->Description));
+$results['room_notes'] = '';
 
+$number = r25_canonicalize_room_number($number);
 
 # New static locations for media files
 $pdf = sprintf("%s_%s_schematic.pdf", $building, $number);
@@ -93,14 +75,6 @@ if (empty($results['schematic_url']) &&
 {
     $results['schematic_url'] = "http://www.cte.uw.edu/images/rooms/schematics/$pdf";
     $results['schematic_thumbnail_url'] = "//www.cte.uw.edu/images/rooms/schematics/$png";
-}
-
-$pdf = sprintf("%s_%s_instructions.pdf", $building, $number);
-if (empty($results['instructions_url']) &&
-    is_file("$image_dir/instructions/$pdf") &&
-    is_readable("$image_dir/instructions/$pdf"))
-{
-    $results['instructions_url'] = "http://www.cte.uw.edu/images/rooms/instructions/$pdf";
 }
 
 $jpg = sprintf("%s_%s_panorama.jpg", $building, $number);
@@ -166,19 +140,43 @@ foreach($roomInfo25->custom_attribute as $row) {
 #    $results['attribute_list']['Custom Attributes'][] = $attribute;
 }
 
+$instructions_pdf = sprintf("%s_%s_instructions.pdf", $results['building_code'], $results['room_number']);
+if (is_file("$image_dir/instructions/$instructions_pdf") &&
+    is_readable("$image_dir/instructions/$instructions_pdf"))
+{
+    $results['service_urls']['Room instructions'] = "http://www.cte.uw.edu/images/rooms/instructions/$instructions_pdf";
+}
 
+$results['service_urls']['Report a problem'] = "https://www.cte.uw.edu/academictechnologies/room-problem/?building={$results['building_code']}&room_number={$results['room_number']}";
 
+switch ("{$results['building_code']} {$results['room_number']}") {
+case 'MGH 030':
+case 'MGH 044':
+    $results['service_urls']['Computer specifications'] = 'https://itconnect.uw.edu/learn/technology-spaces/mgh-044-computer-classroom/mgh-030-and-mgh-044-software-and-hardware-list/';
+    break;
+default:
+    break;
+}
 
-
-
-echo json_encode($results);
+switch ($results['room_type']) {
+case 'Active Learning Classroom':
+case 'Auditorium':
+case 'Breakout Room':
+case 'Case Study Classroom':
+case 'Computer Classroom':
+case 'Classroom':
+case 'Seminar Room':
+    $results['service_urls']['Emergency procedures'] = 'https://www.ehs.washington.edu/system/files/resources/classroom-evacuations.pdf';
+    break;
+default:
+    break;
+}
 
 if (! isset($_GET['debug']))
-    exit();
+    exit(json_encode($results));
 
 ?>
-<br clear="all" />
+<form method="POST"><input type="submit" name="update_cache" value="Reload Cached Entries" /></form>
+<pre><?= htmlentities(json_encode($results, JSON_PRETTY_PRINT)) ?></pre>
 <hr />
-<pre style="text-align: left; color: black; background-color: white">
-<?= $debug_output ?>
-</pre>
+<pre><?= $debug_output ?></pre>

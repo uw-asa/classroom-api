@@ -2,7 +2,7 @@
 
 $json = isset($_GET['json']) && ($_GET['json'] || $_GET['json'] === '');
 
-include('../misc.php');
+include('misc.php');
 
 include('r25.php');
 
@@ -18,15 +18,14 @@ $spaces = r25_get('spaces', $query25);
 
 $buildings = array();
 foreach ($spaces as $space) {
-    #dprint($space->formal_name);
-
-    $room = r25_decode_formal_name($space->formal_name);
-
     $building = trim(substr($space->space_name, 0, 4));
     if ($building == 'EE1' || $building == 'EEB')
         $building = 'ECE';
 
-    $buildings[$building] = $room['building'];
+    if ($room = r25_decode_formal_name((string)$space->formal_name))
+        $buildings[$building] = $room['building'];
+    else
+        $buildings[$building] = (string)$space->formal_name;
 }
 #$buildings = array_filter($buildings, function($b){ return ($b->Site->Code == 'SEA_MN'); });
 
@@ -37,7 +36,11 @@ $results = array();
 foreach ($buildings as $code => $name) {
 
   if ($json) {
-    $results[$code]['building_name'] = $name;
+    if (empty($name)) {
+      $results[$code]['building_name'] = $code;
+    } else {
+      $results[$code]['building_name'] = $name;
+    }
   }
   else
   {
@@ -47,22 +50,14 @@ foreach ($buildings as $code => $name) {
 
 }
 
-if ($json)
-{
-
-  echo json_encode($results);
-
-}
-
-if (! isset($_GET['debug']))
+if (! $json)
     exit();
 
+if (! isset($_GET['debug']))
+    exit(json_encode($results));
+
 ?>
-<br clear="all" />
+<form method="POST"><input type="submit" name="update_cache" value="Reload Cached Entries" /></form>
+<pre><?= htmlentities(json_encode($results, JSON_PRETTY_PRINT)) ?></pre>
 <hr />
-<form method="POST">
- <input type="submit" name="update_cache" value="Reload Cached Entries" />
-</form>
-<pre style="text-align: left; color: black; background-color: white">
-<?= $debug_output ?>
-</pre>
+<pre><?= $debug_output ?></pre>

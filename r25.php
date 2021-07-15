@@ -89,6 +89,9 @@ function r25_decode_formal_name($longname)
 {
     preg_match('/(?P<campus>.+)- (?P<building>.+) (?P<number>[A-Z\d]{3,5})(\s+\((?P<name>.+)\))?/', $longname, $matches);
 
+    if (!count($matches))
+        return false;
+
     if (!array_key_exists('name', $matches))
         $matches['name'] = null;
 
@@ -105,5 +108,23 @@ function r25_decode_formal_name($longname)
                  'number' => $matches['number'],
                  'name' => $matches['name']);
 }
+
+function r25_canonicalize_room_number($room_number)
+{
+    preg_match('/^\s*(?P<prefix>[^\d]?)(?P<number>\d+)(?P<suffix>[^\d]?)\s*$/', $room_number, $matches);
+
+    return sprintf('%s%03d%s', $matches['prefix'], $matches['number'], $matches['suffix']);
+}
+
+function r25_decode_space_name($space_name)
+{
+    list($building_code, $room_number) = preg_split('/\s+/', $space_name);
+
+    return array('building_code' => $building_code,
+                 'number' => $room_number);
+#                 'number' => r25_canonicalize_room_number($room_number));
+
+}
+
 
 ?>

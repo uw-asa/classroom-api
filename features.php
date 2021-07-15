@@ -1,6 +1,6 @@
 <?php
 
-include('../misc.php');
+include('misc.php');
 
 include('r25.php');
 

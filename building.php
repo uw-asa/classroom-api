@@ -11,16 +11,16 @@ if (count($args) > 1)
   $_GET['building'] = urldecode($args[1]);
 
 
-include('../misc.php');
+include('misc.php');
 
 if ($_GET['building'] == 'EE1' || $_GET['building'] == 'EEB')
         $_GET['building'] = 'ECE';
 
-require '../SpaceWS/vendor/autoload.php';
+require 'vendor/autoload.php';
 use UW\SpaceWS\Facility;
 use UW\SpaceWS\Room;
 
-include '../uw_ws.php';
+include '/usr/local/etc/uw_ws/config.php';
 
 # get building
 try {
@@ -29,7 +29,7 @@ try {
 } catch (Exception $e) {
     header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
     include('error/404.php');
-    exit();
+    goto MyExit;
 }
 
 dprint_r($facility);
@@ -51,7 +51,7 @@ $query25['short_name'] = $_GET['building'];
 
 if (!isset($_GET['inactive'])) {
         $query25['category_id'] = '384'; # Campus - Seattle -- Upper Campus
-        $query25['formal_name'] = 'Seattle-';
+#        $query25['formal_name'] = 'Seattle-';
 }
 
 $feature_ids = array();
@@ -78,20 +78,27 @@ dprint_r($spaces);
 
 if (count($spaces)) {
     foreach ($spaces as $space) {
-        $nameInfo = r25_decode_formal_name((string)$space->formal_name);
-        $number = $nameInfo['number'];
-        $roomname = $nameInfo['name'];
+
+        dprint("Looking for {$space->formal_name}");
+        if ($nameInfo = r25_decode_formal_name((string)$space->formal_name)) {
+            dprint_r($nameInfo);
+            $number = $nameInfo['number'];
+            $roomname = $nameInfo['name'];
+        } elseif ($nameInfo = r25_decode_space_name((string)$space->space_name)) {
+            $roomname = '';
+            $number = $nameInfo['number'];
+        }
+
+        dprint_r($nameInfo);
 
         try {
             $roomObj = Room::fromFacilityCodeAndRoomNumber($facility->FacilityCode, $number);
+            $roomtype = ucfirst(strtolower($roomObj->RoomType->Description));
         } catch (Exception $e) {
-            header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-            include('error/404.php');
-            exit();
+            $roomtype = 'Unknown';
         }
 
-        dprint(print_r($roomObj, true));
-
+        dprint_r($roomObj);
 
         $room = $facility->FacilityCode . ' ' . $number;
 
@@ -102,7 +109,7 @@ if (count($spaces)) {
             $results['room_list'][$room]['room_name'] = $roomname;
             $results['room_list'][$room]['room_number'] = $number;
             $results['room_list'][$room]['room_capacity'] = (int)$space->max_capacity;
-            $results['room_list'][$room]['room_type'] = ucfirst(strtolower($roomObj->Description));
+            $results['room_list'][$room]['room_type'] = $roomtype;
             #$results['room_list'][$room]['room_notes'] = $row['Notes'];
             #$results['room_list'][$room]['room_notes'] = $roomObj->RoomType->Code;
 
@@ -133,6 +140,14 @@ if (count($spaces)) {
 <?php
 }
 
+    $results['service_urls']['Schedule a tutorial'] = 'https://itconnect.uw.edu/learn/technology-training/equipment/';
+    $results['service_urls']['Report a problem'] = "http://www.washington.edu/classroom/problem/?building={$results['building_code']}";
+
+    $results['service_urls']['Special event request'] = 'https://www.cte.uw.edu/eventservices/room-request/';
+
+    $results['access_url'] = sprintf("https://depts.washington.edu/ceogis/Public/Accessibility/Map/?query=%s,%s,%s",
+                                       'Building%20Information', 'FacilityCode', $results['building_code']);
+
 if ($json)
 {
   if ($facility && $facility->CenterPointLongitude != 0 && $facility->CenterPointLatitude != 0) {
@@ -144,6 +159,7 @@ if ($json)
 
 }
 
+MyExit:
 if (! isset($_GET['debug']))
     exit();
 

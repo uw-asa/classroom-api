@@ -2,7 +2,7 @@
 
 $starttime = microtime(true);
 
-include('../misc.php');
+include('misc.php');
 
 include('r25.php');
 
@@ -58,26 +58,16 @@ foreach($spaces as $space) {
         $results[$room]['feature'][(int)$feature->feature_id] = (string)$feature->feature_name;
 }
 
-
-
-if ( isset($_GET['debug']) ) {
-?>
-<form method="POST">
- <input type="submit" name="update_cache" value="Reload Cached Entries" />
-</form>
-<?php
-}
-
 dprint(count($results) . " results");
 
-echo json_encode($results);
+#if (! $json)
+#    exit();
 
 if (! isset($_GET['debug']))
-    exit();
+    exit(json_encode($results));
 
 ?>
-<br clear="all" />
+<form method="POST"><input type="submit" name="update_cache" value="Reload Cached Entries" /></form>
+<pre><?= htmlentities(json_encode($results, JSON_PRETTY_PRINT)) ?></pre>
 <hr />
-<pre style="text-align: left; color: black; background-color: white">
-<?= $debug_output ?>
-</pre>
+<pre><?= $debug_output ?></pre>
