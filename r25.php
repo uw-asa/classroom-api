@@ -20,10 +20,10 @@ function r25_get($r25_table, $r25_query, $timeout=2880)
 
     $url = $r25_baseurl . $r25_table . '.xml?' . http_build_query($r25_query, '', '&', PHP_QUERY_RFC3986);
 
-    if ( isset($_POST['update_cache']) || !( $text = apc_fetch($url) ) ) {
+    if ( isset($_POST['update_cache']) || !( $text = apcu_fetch($url) ) ) {
         $text = file_get_contents( $url, false, $ctx );
 
-        apc_store($url, $text, $timeout);
+        apcu_store($url, $text, $timeout);
     }
 
     return simplexml_load_string($text, 'SimpleXMLElement', 0, 'http://www.collegenet.com/r25');
