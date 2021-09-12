@@ -18,7 +18,8 @@ include('misc.php');
 
 include('r25.php');
 
-$image_dir = "/var/www/room-images";
+$image_dir = "../room-images";
+$image_url = "http://{$_SERVER['SERVER_NAME']}/room-images";
 
 require 'vendor/autoload.php';
 use UW\SpaceWS\Facility;
@@ -73,8 +74,8 @@ if (empty($results['schematic_url']) &&
     is_file("$image_dir/schematics/$pdf") &&
     is_readable("$image_dir/schematics/$pdf"))
 {
-    $results['schematic_url'] = "http://www.cte.uw.edu/images/rooms/schematics/$pdf";
-    $results['schematic_thumbnail_url'] = "//www.cte.uw.edu/images/rooms/schematics/$png";
+    $results['schematic_url'] = "{$image_url}/schematics/$pdf";
+    $results['schematic_thumbnail_url'] = "{$image_url}/schematics/$png";
 }
 
 $jpg = sprintf("%s_%s_panorama.jpg", $building, $number);
@@ -82,7 +83,7 @@ if (empty($results['panorama_url']) &&
     is_file("$image_dir/panoramas/$jpg") &&
     is_readable("$image_dir/panoramas/$jpg"))
 {
-    $results['panorama_url'] = "//www.cte.uw.edu/images/rooms/panoramas/$jpg";
+    $results['panorama_url'] = "{$image_url}/panoramas/$jpg";
 }
 
 if (isset($_GET['meta'])) {
@@ -91,13 +92,13 @@ if (isset($_GET['meta'])) {
 
   switch($_GET['meta']) {
   case 'instructions':
-    header("Location: //www.cte.uw.edu/images/rooms/instructions/{$building}_{$number}_instructions.pdf", TRUE, 301);
+    header("Location: {$image_url}/instructions/{$building}_{$number}_instructions.pdf", TRUE, 301);
     exit();
   case 'schematic':
-    header("Location: //www.cte.uw.edu/images/rooms/schematics/{$building}_{$number}_schematic.pdf", TRUE, 301);
+    header("Location: {$image_url}/schematics/{$building}_{$number}_schematic.pdf", TRUE, 301);
     exit();
   case 'schematic_thumbnail':
-    header("Location: //www.cte.uw.edu/images/rooms/schematics/{$building}_{$number}_schematic_thumbnail.png", TRUE, 301);
+    header("Location: {$image_url}/schematics/{$building}_{$number}_schematic_thumbnail.png", TRUE, 301);
     exit();
   }
 
@@ -144,7 +145,7 @@ $instructions_pdf = sprintf("%s_%s_instructions.pdf", $results['building_code'],
 if (is_file("$image_dir/instructions/$instructions_pdf") &&
     is_readable("$image_dir/instructions/$instructions_pdf"))
 {
-    $results['service_urls']['Room instructions'] = "http://www.cte.uw.edu/images/rooms/instructions/$instructions_pdf";
+    $results['service_urls']['Room instructions'] = "{$image_url}/instructions/$instructions_pdf";
 }
 
 $results['service_urls']['Report a problem'] = "https://www.cte.uw.edu/academictechnologies/room-problem/?building={$results['building_code']}&room_number={$results['room_number']}";
