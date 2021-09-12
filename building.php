@@ -153,6 +153,14 @@ if (count($spaces)) {
             rawurlencode($results['building_name']),
             3
         );
+    } elseif ($facility && $facility->FacilityNumber) {
+        // Don't know if this works at all
+        $results['access_url'] = sprintf(
+            "https://depts.washington.edu/ceogis/Public/Accessibility/Map/?query=%s,%s,%d",
+            'Building%20Information',
+            'FacilityNumber',
+            $facility->FacilityNumber
+        );
     } else {
         // Don't know if this works at all
         $results['access_url'] = sprintf("https://depts.washington.edu/ceogis/Public/Accessibility/Map/?query=%s,%s,%s",
