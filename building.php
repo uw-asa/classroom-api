@@ -145,16 +145,22 @@ if (count($spaces)) {
 
     $results['service_urls']['Special event request'] = 'https://www.cte.uw.edu/eventservices/room-request/';
 
-    $results['access_url'] = sprintf("https://depts.washington.edu/ceogis/Public/Accessibility/Map/?query=%s,%s,%s",
+    if ($facility && $facility->CenterPointLongitude != 0 && $facility->CenterPointLatitude != 0) {
+        $results['access_url'] = sprintf(
+            "https://depts.washington.edu/ceogis/Public/Accessibility/Map/?marker=%f,%f,,%s&level=%d",
+            $facility->CenterPointLongitude,
+            $facility->CenterPointLatitude,
+            rawurlencode($results['building_name']),
+            3
+        );
+    } else {
+        // Don't know if this works at all
+        $results['access_url'] = sprintf("https://depts.washington.edu/ceogis/Public/Accessibility/Map/?query=%s,%s,%s",
                                        'Building%20Information', 'FacilityCode', $results['building_code']);
+    }
 
 if ($json)
 {
-  if ($facility && $facility->CenterPointLongitude != 0 && $facility->CenterPointLatitude != 0) {
-    $results['access_url'] = sprintf("https://depts.washington.edu/ceogis/Public/Accessibility/Map/?marker=%f,%f,,%s&level=%d",
-				     $facility->CenterPointLongitude, $facility->CenterPointLatitude, rawurlencode($results['building_name']), 3);
-  }
-
   echo json_encode($results);
 
 }
