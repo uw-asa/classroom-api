@@ -54,6 +54,7 @@ foreach($spaces as $space) {
         $attribute = array(
                            'name' => $feature['display_name'],
                            'quantity' => $feature['quantity'],
+                           'feature_id' => $feature['feature_id'],
     #                       'length' => $row['Length'],
     #                       'width' => $row['Width'],
     #                       'notes' => $row['Notes'],
