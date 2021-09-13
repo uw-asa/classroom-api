@@ -10,11 +10,12 @@ if (isset($_SERVER['PATH_INFO']))
 if (count($args) > 1)
   $_GET['building'] = urldecode($args[1]);
 
+$building_code = preg_replace("/[^a-zA-Z0-9]+/", "", $_GET['building']);
 
 include('misc.php');
 
-if ($_GET['building'] == 'EE1' || $_GET['building'] == 'EEB')
-        $_GET['building'] = 'ECE';
+if ($building_code == 'EE1' || $building_code == 'EEB')
+        $building_code = 'ECE';
 
 require 'vendor/autoload.php';
 use UW\SpaceWS\Facility;
@@ -24,7 +25,7 @@ include '/usr/local/etc/uw_ws/config.php';
 # get building
 try {
     /* Query the web services */
-    $facility = Facility::fromFacilityCode($_GET['building']);
+    $facility = Facility::fromFacilityCode($building_code);
 } catch (Exception $e) {
     header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
     include('error/404.php');
@@ -43,10 +44,10 @@ include('r25.php');
 
 $query25 = array();
 
-if ($_GET['building'] == 'EE1' || $_GET['building'] == 'EEB' || $_GET['building'] == 'ECE')
-    $_GET['building'] = 'EEB'; #r25 has old code
+if ($building_code == 'EE1' || $building_code == 'EEB' || $building_code == 'ECE')
+    $building_code = 'EEB'; #r25 has old code
 
-$query25['short_name'] = $_GET['building'];
+$query25['short_name'] = $building_code;
 
 if (!isset($_GET['inactive'])) {
         $query25['category_id'] = '384'; # Campus - Seattle -- Upper Campus
