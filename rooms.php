@@ -50,6 +50,8 @@ foreach($spaces as $space) {
 
     foreach($space->feature as $featureObj) {
         $feature = array_merge((array)$featureObj, r25_decode_feature_name((string)$featureObj->feature_name));
+        if ($feature['category'] == 'Hidden')
+            continue;
 
         $attribute = array(
                            'name' => $feature['display_name'],

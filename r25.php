@@ -50,14 +50,15 @@ function r25_decode_feature_name($longname)
         switch ($category) {
         case 'ADA':
         case 'AV':
-        case 'Facilities':
         case 'Furniture Type':
-        case 'Room Type':
             $display_name = $matches['name'];
             break;
+        case 'Facilities':
+        case 'Lectern':
+        case 'Room Type':
+            $category = "Hidden";
         case 'Board':
         case 'Chairs':
-        case 'Lectern':
         case 'Tables':
         default:
             $display_name = $longname;
@@ -66,9 +67,6 @@ function r25_decode_feature_name($longname)
     } else {
         $display_name = $longname;
         switch ($display_name) {
-        case 'Lectern/Podium/Stand':
-            $category = 'Lectern';
-            break;
         case 'Tables':
             $category = 'Tables';
             break;
@@ -76,7 +74,7 @@ function r25_decode_feature_name($longname)
             $category = 'AV';
             break;
         default:
-            $category = 'Facilities';
+            $category = 'Hidden';
             break;
         }
         if ($display_name[0] == '*') {

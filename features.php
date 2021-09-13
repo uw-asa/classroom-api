@@ -20,7 +20,11 @@ foreach ($spaces as $space) {
         if (isset($features[$id]))
             continue;
 
-        $features[$id] = array_merge((array)$featureObj, r25_decode_feature_name((string)$featureObj->feature_name));
+        $decoded_feature = r25_decode_feature_name((string)$featureObj->feature_name);
+        if ($decoded_feature['category'] == 'Hidden')
+            continue;
+
+        $features[$id] = array_merge((array)$featureObj, $decoded_feature);
     }
 }
 
