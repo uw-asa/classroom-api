@@ -144,6 +144,10 @@ if (count($spaces)) {
 <?php
 }
 
+if (! $json) {
+    exit();
+}
+
     $results['service_urls']['Schedule a tutorial'] = 'https://itconnect.uw.edu/learn/technology-training/equipment/';
     $results['service_urls']['Report a problem'] = "http://www.washington.edu/classroom/problem/?building={$results['building_code']}";
 
@@ -171,21 +175,12 @@ if (count($spaces)) {
                                        'Building%20Information', 'FacilityCode', $results['building_code']);
     }
 
-if ($json && ! isset($_GET['debug']))
-{
-  echo json_encode($results);
-
-}
-
 MyExit:
 if (! isset($_GET['debug']))
-    exit();
+    exit(json_encode($results));
 
 ?>
-<br clear="all" />
-<hr />
+<form method="POST"><input type="submit" name="update_cache" value="Reload Cached Entries" /></form>
 <pre><?= htmlentities(json_encode($results, JSON_PRETTY_PRINT)) ?></pre>
 <hr />
-<pre style="text-align: left; color: black; background-color: white">
-<?= $debug_output ?>
-</pre>
+<pre><?= $debug_output ?></pre>
