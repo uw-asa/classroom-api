@@ -92,6 +92,22 @@ if (count($spaces)) {
 
         $room = $facility->FacilityCode . ' ' . $number;
 
+        foreach($space->feature as $featureObj) {
+            $feature = array_merge((array)$featureObj, r25_decode_feature_name((string)$featureObj->feature_name));
+
+            $attribute = array(
+                               'name' => $feature['display_name'],
+                               'quantity' => $feature['quantity'],
+        #                       'length' => $row['Length'],
+        #                       'width' => $row['Width'],
+        #                       'notes' => $row['Notes'],
+                       );
+            $results['room_list'][$room]['attribute_list'][$feature['category']][] = $attribute;
+        }
+
+        if ($results['room_list'][$room]['attribute_list']) {
+            ksort($results['room_list'][$room]['attribute_list']);
+        }
 
         if ( $json ) {
 

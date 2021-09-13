@@ -48,7 +48,22 @@ foreach($spaces as $space) {
 
     $room = $building . ' ' . $room_number;
 
-    dprint(print_r($space, true));
+    foreach($space->feature as $featureObj) {
+        $feature = array_merge((array)$featureObj, r25_decode_feature_name((string)$featureObj->feature_name));
+
+        $attribute = array(
+                           'name' => $feature['display_name'],
+                           'quantity' => $feature['quantity'],
+    #                       'length' => $row['Length'],
+    #                       'width' => $row['Width'],
+    #                       'notes' => $row['Notes'],
+                   );
+        $results[$room]['attribute_list'][$feature['category']][] = $attribute;
+    }
+
+    if ($results[$room]['attribute_list']) {
+        ksort($results[$room]['attribute_list']);
+    }
 
     $results[$room]['room_name'] = (string)$space->formal_name;
     $results[$room]['room_number'] = $room_number;
