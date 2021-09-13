@@ -14,6 +14,8 @@ $building_code = preg_replace("/[^a-zA-Z0-9]+/", "", $_GET['building']);
 
 include('misc.php');
 
+header("Access-Control-Allow-Origin: *");
+
 if ($building_code == 'EE1' || $building_code == 'EEB')
         $building_code = 'ECE';
 
@@ -116,7 +118,8 @@ if (count($spaces)) {
             $results['room_list'][$room]['room_name'] = $roomname;
             $results['room_list'][$room]['room_number'] = $number;
             $results['room_list'][$room]['room_capacity'] = (int)$space->max_capacity;
-            #$results['room_list'][$room]['room_notes'] = $row['Notes'];
+            $results['room_list'][$room]['price_group'] = '';
+            $results['room_list'][$room]['room_notes'] = '';
 
         } else {
 
@@ -150,7 +153,7 @@ if (! $json) {
 }
 
     $results['service_urls']['Schedule a tutorial'] = 'https://itconnect.uw.edu/learn/technology-training/equipment/';
-    $results['service_urls']['Report a problem'] = "http://www.washington.edu/classroom/problem/?building={$results['building_code']}";
+    $results['service_urls']['Report a problem'] = "https://academictechnologies.asa.uw.edu/room-problem/?building={$results['building_code']}";
 
     $results['service_urls']['Special event request'] = 'https://www.cte.uw.edu/eventservices/room-request/';
 

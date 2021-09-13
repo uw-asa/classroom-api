@@ -69,6 +69,7 @@ foreach($spaces as $space) {
     $results[$room]['room_name'] = (string)$space->formal_name;
     $results[$room]['room_number'] = $room_number;
     $results[$room]['capacity'] = (string)$space->max_capacity;
+    $results[$room]['price_group'] = '';
 
     foreach($space->feature as $feature)
         $results[$room]['feature'][(int)$feature->feature_id] = (string)$feature->feature_name;

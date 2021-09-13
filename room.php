@@ -62,6 +62,7 @@ $results['building_code'] = $building;
 $results['room_name'] = $nameInfo['name'];
 $results['room_number'] = $number;
 $results['room_capacity'] = $space->Capacity;
+$results['price_group'] = '';
 $results['room_notes'] = '';
 
 $number = r25_canonicalize_room_number($number);
@@ -147,7 +148,7 @@ if (is_file("$image_dir/instructions/$instructions_pdf") &&
     $results['service_urls']['Room instructions'] = "{$image_url}/instructions/$instructions_pdf";
 }
 
-$results['service_urls']['Report a problem'] = "https://www.cte.uw.edu/academictechnologies/room-problem/?building={$results['building_code']}&room_number={$results['room_number']}";
+$results['service_urls']['Report a problem'] = "https://academictechnologies.asa.uw.edu/room-problem/?building={$results['building_code']}&room_number={$results['room_number']}";
 
 switch ("{$results['building_code']} {$results['room_number']}") {
 case 'MGH 030':
@@ -158,8 +159,12 @@ default:
     break;
 }
 
+// FIXME: most rooms have no Room Type feature in R25
 switch ($results['attribute_list']['Room Type'][0]['name']) {
 case 'Active Learning Classroom':
+case 'Computer Lab -- Pc/Windows':
+case 'Film Room':
+// above three are only ones in R25
 case 'Auditorium':
 case 'Breakout Room':
 case 'Case Study Classroom':

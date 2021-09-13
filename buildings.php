@@ -6,6 +6,8 @@ include('misc.php');
 
 include('r25.php');
 
+header("Access-Control-Allow-Origin: https://academictechnologies.asa.uw.edu");
+
 $query25 = array();
 
 $query25['category_id'] = '186,384'; # Type - 110 - General Classroom (Central Assignment), Campus - Seattle -- Upper Campus
