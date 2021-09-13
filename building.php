@@ -18,7 +18,6 @@ if ($_GET['building'] == 'EE1' || $_GET['building'] == 'EEB')
 
 require 'vendor/autoload.php';
 use UW\SpaceWS\Facility;
-use UW\SpaceWS\Room;
 
 include '/usr/local/etc/uw_ws/config.php';
 
@@ -91,15 +90,6 @@ if (count($spaces)) {
 
         dprint_r($nameInfo);
 
-        try {
-            $roomObj = Room::fromFacilityCodeAndRoomNumber($facility->FacilityCode, $number);
-            $roomtype = ucfirst(strtolower($roomObj->RoomType->Description));
-        } catch (Exception $e) {
-            $roomtype = 'Unknown';
-        }
-
-        dprint_r($roomObj);
-
         $room = $facility->FacilityCode . ' ' . $number;
 
 
@@ -109,9 +99,7 @@ if (count($spaces)) {
             $results['room_list'][$room]['room_name'] = $roomname;
             $results['room_list'][$room]['room_number'] = $number;
             $results['room_list'][$room]['room_capacity'] = (int)$space->max_capacity;
-            $results['room_list'][$room]['room_type'] = $roomtype;
             #$results['room_list'][$room]['room_notes'] = $row['Notes'];
-            #$results['room_list'][$room]['room_notes'] = $roomObj->RoomType->Code;
 
         } else {
 

@@ -62,7 +62,6 @@ $results['building_code'] = $building;
 $results['room_name'] = $nameInfo['name'];
 $results['room_number'] = $number;
 $results['room_capacity'] = $space->Capacity;
-$results['room_type'] = ucfirst(strtolower($space->Description));
 $results['room_notes'] = '';
 
 $number = r25_canonicalize_room_number($number);
@@ -159,7 +158,7 @@ default:
     break;
 }
 
-switch ($results['room_type']) {
+switch ($results['attribute_list']['Room Type'][0]['name']) {
 case 'Active Learning Classroom':
 case 'Auditorium':
 case 'Breakout Room':
