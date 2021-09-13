@@ -31,7 +31,7 @@ try {
     goto MyExit;
 }
 
-dprint_r($facility);
+// dprint_r($facility);
 
 $results['building_code'] = $facility->FacilityCode;
 $results['building_name'] = $facility->LongName;
@@ -155,7 +155,7 @@ if (count($spaces)) {
                                        'Building%20Information', 'FacilityCode', $results['building_code']);
     }
 
-if ($json)
+if ($json && ! isset($_GET['debug']))
 {
   echo json_encode($results);
 
@@ -167,6 +167,8 @@ if (! isset($_GET['debug']))
 
 ?>
 <br clear="all" />
+<hr />
+<pre><?= htmlentities(json_encode($results, JSON_PRETTY_PRINT)) ?></pre>
 <hr />
 <pre style="text-align: left; color: black; background-color: white">
 <?= $debug_output ?>
