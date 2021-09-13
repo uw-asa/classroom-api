@@ -108,9 +108,10 @@ if (count($spaces)) {
             $results['room_list'][$room]['attribute_list'][$feature['category']][] = $attribute;
         }
 
-        if ($results['room_list'][$room]['attribute_list']) {
-            ksort($results['room_list'][$room]['attribute_list']);
-        }
+        if (!$results['room_list'][$room]['attribute_list'])
+            continue;
+
+        ksort($results['room_list'][$room]['attribute_list']);
 
         if ( $json ) {
 
