@@ -79,6 +79,10 @@ function r25_decode_feature_name($longname)
             $category = 'Facilities';
             break;
         }
+        if ($display_name[0] == '*') {
+            $display_name = ltrim($display_name, '*');
+            $category = 'Notes';
+        }
     }
 
     return array('category' => $category,
