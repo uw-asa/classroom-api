@@ -175,6 +175,7 @@ case 'Seminar Room':
     $results['service_urls']['Emergency procedures'] = 'https://www.ehs.washington.edu/system/files/resources/classroom-evacuations.pdf';
     break;
 default:
+    $results['service_urls']['Emergency procedures'] = 'https://www.ehs.washington.edu/system/files/resources/classroom-evacuations.pdf';
     break;
 }
 
