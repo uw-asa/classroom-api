@@ -52,8 +52,10 @@ if ($building_code == 'EE1' || $building_code == 'EEB' || $building_code == 'ECE
 $query25['short_name'] = $building_code;
 
 if (!isset($_GET['inactive'])) {
-        $query25['category_id'] = '384'; # Campus - Seattle -- Upper Campus
-#        $query25['formal_name'] = 'Seattle-';
+    $query25['category_id'] = implode(',', array(
+        '186', # Type - 110 - General Classroom (Central Assignment)
+        '384', # Campus - Seattle -- Upper Campus
+    ));
 }
 
 $feature_ids = array();
@@ -109,9 +111,6 @@ if (count($spaces)) {
                        );
             $results['room_list'][$room]['attribute_list'][$feature['category']][] = $attribute;
         }
-
-        if (!$results['room_list'][$room]['attribute_list'])
-            continue;
 
         ksort($results['room_list'][$room]['attribute_list']);
 

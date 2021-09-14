@@ -10,7 +10,10 @@ header("Access-Control-Allow-Origin: https://academictechnologies.asa.uw.edu");
 
 $query25 = array();
 
-$query25['category_id'] = '186,384'; # Type - 110 - General Classroom (Central Assignment), Campus - Seattle -- Upper Campus
+$query25['category_id'] = implode(',', array(
+    '186', # Type - 110 - General Classroom (Central Assignment)
+    '384', # Campus - Seattle -- Upper Campus
+));
 
 dprint(print_r($query25, true));
 

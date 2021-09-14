@@ -13,8 +13,10 @@ if (isset($_GET['capacity']) && intval($_GET['capacity']) > 0) {
 }
 
 if (isset($_GET['active'])) {
-        $query25['category_id'] = '384'; # Campus - Seattle -- Upper Campus
-        $query25['formal_name'] = 'Seattle-';
+    $query25['category_id'] = implode(',', array(
+        '186', # Type - 110 - General Classroom (Central Assignment)
+        '384', # Campus - Seattle -- Upper Campus
+    ));
 }
 
 $feature_ids = array();

@@ -6,10 +6,13 @@ include('r25.php');
 
 #Get all features in all generally-assignable classrooms
 $query = array(
-               'category_id' => '384', # Type - 110 - General Classroom (Central Assignment), Campus - Seattle -- Upper Campus
-               'scope' => 'extended',
-               'include' => 'features',
-               );
+    'category_id' => implode(',', array(
+        '186', # Type - 110 - General Classroom (Central Assignment)
+        '384', # Campus - Seattle -- Upper Campus
+    )),
+    'scope' => 'extended',
+    'include' => 'features',
+);
 
 $spaces = r25_get('spaces', $query, 86400);
 
