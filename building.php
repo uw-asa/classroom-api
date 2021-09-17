@@ -168,7 +168,7 @@ if (! $json) {
             3
         );
     } elseif ($facility && $facility->FacilityNumber) {
-        // Don't know if this works at all
+        // Not every building supported
         $results['access_url'] = sprintf(
             "https://depts.washington.edu/ceogis/Public/Accessibility/Map/?query=%s,%s,%d",
             'Building%20Information',
@@ -176,7 +176,7 @@ if (! $json) {
             $facility->FacilityNumber
         );
     } else {
-        // Don't know if this works at all
+        // Not every building supported
         $results['access_url'] = sprintf("https://depts.washington.edu/ceogis/Public/Accessibility/Map/?query=%s,%s,%s",
                                        'Building%20Information', 'FacilityCode', $results['building_code']);
     }
