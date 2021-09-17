@@ -19,25 +19,7 @@ header("Access-Control-Allow-Origin: *");
 if ($building_code == 'EE1' || $building_code == 'EEB')
         $building_code = 'ECE';
 
-require 'vendor/autoload.php';
-use UW\SpaceWS\Facility;
-
-include '/usr/local/etc/uw_ws/config.php';
-
-# get building
-try {
-    /* Query the web services */
-    $facility = Facility::fromFacilityCode($building_code);
-} catch (Exception $e) {
-    header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-    include('error/404.php');
-    goto MyExit;
-}
-
-// dprint_r($facility);
-
 $results['building_code'] = $building_code;
-$results['building_name'] = $facility->LongName;
 
 
 include('r25.php');
@@ -69,7 +51,7 @@ $query25['feature_id'] = implode(',', $feature_ids);
 
 #$includes[] = 'categories';
 $includes[] = 'features';
-#$includes[] = 'attributes';
+$includes[] = 'attributes';
 
 $query25['scope'] = 'extended';
 $query25['include'] = implode('+', $includes);
@@ -114,6 +96,17 @@ if (count($spaces)) {
         }
 
         ksort($results['room_list'][$room]['attribute_list']);
+
+        foreach ($space->custom_attribute as $attribute) {
+            switch ($attribute->attribute_name) {
+                case 'Latitude':
+                case 'Longitude':
+                case 'MAP':
+                    // Building attributes
+                    $results[strtolower($attribute->attribute_name)] = (string)$attribute->attribute_value;
+                    break;
+            }
+        }
 
         if ( $json ) {
 
@@ -160,21 +153,13 @@ if (! $json) {
 
     $results['service_urls']['Special event request'] = 'https://www.cte.uw.edu/eventservices/room-request/';
 
-    if ($facility && $facility->CenterPointLongitude != 0 && $facility->CenterPointLatitude != 0) {
+    if ($results['longitude'] && $results['latitude']) {
         $results['access_url'] = sprintf(
             "https://depts.washington.edu/ceogis/Public/Accessibility/Map/?marker=%f,%f,,%s&level=%d",
-            $facility->CenterPointLongitude,
-            $facility->CenterPointLatitude,
+            $results['longitude'],
+            $results['latitude'],
             rawurlencode($results['building_name']),
             3
-        );
-    } elseif ($facility && $facility->FacilityNumber) {
-        // Not every building supported
-        $results['access_url'] = sprintf(
-            "https://depts.washington.edu/ceogis/Public/Accessibility/Map/?query=%s,%s,%d",
-            'Building%20Information',
-            'FacilityNumber',
-            $facility->FacilityNumber
         );
     } else {
         // Not every building supported
