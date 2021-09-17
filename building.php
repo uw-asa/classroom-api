@@ -88,6 +88,7 @@ if (count($spaces)) {
             dprint_r($nameInfo);
             $number = $nameInfo['number'];
             $roomname = $nameInfo['name'];
+            $results['building_name'] = $nameInfo['building'];
         } elseif ($nameInfo = r25_decode_space_name((string)$space->space_name)) {
             $roomname = '';
             $number = $nameInfo['number'];
