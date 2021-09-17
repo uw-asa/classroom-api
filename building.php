@@ -36,7 +36,7 @@ try {
 
 // dprint_r($facility);
 
-$results['building_code'] = $facility->FacilityCode;
+$results['building_code'] = $building_code;
 $results['building_name'] = $facility->LongName;
 
 
@@ -96,7 +96,7 @@ if (count($spaces)) {
 
         dprint_r($nameInfo);
 
-        $room = $facility->FacilityCode . ' ' . $number;
+        $room = $building_code . ' ' . $number;
 
         foreach($space->feature as $featureObj) {
             $feature = array_merge((array)$featureObj, r25_decode_feature_name((string)$featureObj->feature_name));
@@ -117,7 +117,7 @@ if (count($spaces)) {
 
         if ( $json ) {
 
-            $results['room_list'][$room]['building_code'] = $facility->FacilityCode;
+            $results['room_list'][$room]['building_code'] = $building_code;
             $results['room_list'][$room]['room_name'] = $roomname;
             $results['room_list'][$room]['room_number'] = $number;
             $results['room_list'][$room]['room_capacity'] = (int)$space->max_capacity;
