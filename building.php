@@ -153,18 +153,35 @@ if (! $json) {
 
     $results['service_urls']['Special event request'] = 'https://www.cte.uw.edu/eventservices/room-request/';
 
-    if ($results['longitude'] && $results['latitude']) {
-        $results['access_url'] = sprintf(
-            "https://depts.washington.edu/ceogis/Public/Accessibility/Map/?marker=%f,%f,,%s&level=%d",
-            $results['longitude'],
-            $results['latitude'],
-            rawurlencode($results['building_name']),
-            3
-        );
-    } else {
-        // Not every building supported
-        $results['access_url'] = sprintf("https://depts.washington.edu/ceogis/Public/Accessibility/Map/?query=%s,%s,%s",
-                                       'Building%20Information', 'FacilityCode', $results['building_code']);
+    switch ($results['building_code']) {
+        case 'AND':
+        case 'CSE2':
+        case 'CDH':
+        case 'HRC':
+        case 'LOW':
+        case 'OUG':
+        case 'PAA':
+        case 'PAB':
+        case 'PAR':
+        case 'WFS':
+            if ($results['longitude'] && $results['latitude']) {
+                $results['access_url'] = sprintf(
+                    "https://depts.washington.edu/ceogis/Public/Accessibility/Map/?marker=%f,%f,,%s&level=%d",
+                    $results['longitude'],
+                    $results['latitude'],
+                    rawurlencode($results['building_name']),
+                    3
+                );
+            }
+            break;
+        default:
+            $results['access_url'] = sprintf(
+                "https://depts.washington.edu/ceogis/Public/Accessibility/Map/?query=%s,%s,%s",
+                'Building%20Information',
+                'FacilityCode',
+                $results['building_code']
+            );
+            break;
     }
 
 MyExit:
