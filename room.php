@@ -21,10 +21,6 @@ include('r25.php');
 $image_dir = "../room-images";
 $image_url = "http://{$_SERVER['SERVER_NAME']}/room-images";
 
-require 'vendor/autoload.php';
-use UW\SpaceWS\Facility;
-use UW\SpaceWS\Room;
-
 include '/usr/local/etc/uw_ws/config.php';
 
 if (isset($_GET['room'])) {
@@ -38,30 +34,16 @@ if (isset($_GET['room'])) {
 if ($building == 'EE1' || $building == 'EEB' || $building == 'ECE')
     $building = 'ECE';
 
-try {
-    /* Query the web services */
-    $space = Room::fromFacilityCodeAndRoomNumber($building, $number);
-} catch (Exception $e) {
-    header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-    include('error/404.php');
-    exit();
-}
-
-dprint(print_r($space, true));
-
 $short_name = $building . ' ' . $number;
 $roomInfo25 = r25_get_space_by_short_name($short_name);
 dprint(print_r($roomInfo25, true));
 
 $nameInfo = r25_decode_formal_name((string)$roomInfo25->formal_name);
 
-$building = $space->Facility->FacilityCode;
-$number = $space->RoomNumber;
-
 $results['building_code'] = $building;
 $results['room_name'] = $nameInfo['name'];
 $results['room_number'] = $number;
-$results['room_capacity'] = $space->Capacity;
+// $results['room_capacity'] = $space->Capacity;
 $results['price_group'] = '';
 $results['room_notes'] = '';
 
