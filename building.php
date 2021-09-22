@@ -148,7 +148,7 @@ if (! $json) {
     exit();
 }
 
-    $results['service_urls']['Schedule a tutorial'] = 'https://itconnect.uw.edu/learn/technology-training/equipment/';
+    $results['service_urls']['Equipment tutorial'] = 'https://itconnect.uw.edu/learn/technology-training/equipment/';
     $results['service_urls']['Report a problem'] = "https://academictechnologies.asa.uw.edu/room-problem/?building={$results['building_code']}";
 
     $results['service_urls']['Special event request'] = 'https://www.cte.uw.edu/eventservices/room-request/';
