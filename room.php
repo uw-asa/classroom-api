@@ -142,6 +142,12 @@ foreach($roomInfo25->custom_attribute as $row) {
 #    $results['attribute_list']['Custom Attributes'][] = $attribute;
 }
 
+foreach (array_keys($results['attribute_list']) as $category) {
+    usort($results['attribute_list'][$category], function ($a, $b) {
+        return strcmp($a['name'], $b['name']);
+    });
+}
+
 $instructions_pdf = sprintf("%s_%s_instructions.pdf", $results['building_code'], $results['room_number']);
 if (is_file("$image_dir/instructions/$instructions_pdf") &&
     is_readable("$image_dir/instructions/$instructions_pdf"))
