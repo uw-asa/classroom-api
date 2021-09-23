@@ -28,9 +28,6 @@ include('r25.php');
 
 $query25 = array();
 
-if ($building_code == 'EE1' || $building_code == 'EEB' || $building_code == 'ECE')
-    $building_code = 'EEB'; #r25 has old code
-
 $query25['short_name'] = $building_code;
 
 if (!isset($_GET['inactive'])) {
