@@ -153,8 +153,7 @@ if (! $json) {
 
     $results['service_urls']['Equipment tutorial'] = 'https://itconnect.uw.edu/learn/technology-training/equipment/';
     $results['service_urls']['Report a problem'] = "https://academictechnologies.asa.uw.edu/room-problem/?building={$results['building_code']}";
-
-    $results['service_urls']['Special event request'] = 'https://www.cte.uw.edu/eventservices/room-request/';
+    $results['service_urls']['Special event request'] = 'https://eventservices.uw.edu/room-request/';
 
     switch ($results['building_code']) {
         case 'AND':
