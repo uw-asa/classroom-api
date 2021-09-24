@@ -19,9 +19,7 @@ include('misc.php');
 include('r25.php');
 
 $image_dir = "../room-images";
-$image_url = "http://{$_SERVER['SERVER_NAME']}/room-images";
-
-include '/usr/local/etc/uw_ws/config.php';
+$image_url = "https://{$_SERVER['SERVER_NAME']}/room-images";
 
 if (isset($_GET['room'])) {
     list($building, $number) = explode(' ', $_GET['room']);
