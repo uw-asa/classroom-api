@@ -65,16 +65,14 @@ if (count($spaces)) {
         dprint("Looking for {$space->formal_name}");
         if ($nameInfo = r25_decode_formal_name((string)$space->formal_name)) {
             dprint_r($nameInfo);
-            $number = $nameInfo['number'];
             $roomname = $nameInfo['name'];
             $results['building_name'] = $nameInfo['building'];
         } else {
             $results['building_name'] = (string)$space->formal_name;
-            if ($nameInfo = r25_decode_space_name((string)$space->space_name)) {
-                $roomname = '';
-                $number = $nameInfo['number'];
-            }
+            $roomname = '';
         }
+        $nameInfo = r25_decode_space_name((string)$space->space_name);
+        $number = $nameInfo['number'];
 
         dprint_r($nameInfo);
 
