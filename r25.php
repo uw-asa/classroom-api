@@ -39,7 +39,7 @@ function r25_get_space_by_short_name($short_name)
 
 function r25_decode_feature_name($longname)
 {
-    $longname = preg_replace('/^Tables- /', 'Tables - ', $longname); # normalize
+    $longname = preg_replace('/^Tables?\s*-\s*/', 'Tables - ', $longname); # normalize
     $longname = preg_replace('/\(.*\)/', '', $longname); #remove parentheticals
     $longname = trim($longname);
 
