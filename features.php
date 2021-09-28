@@ -31,6 +31,17 @@ foreach ($spaces as $space) {
     }
 }
 
+// Add meta-features
+$features[] = array(
+    'category'      => 'AV',
+    'display_name'  => 'Lecture Capture',
+    'feature_id'    => implode('+', array(
+        '282', # Automated Panopto Recorder
+        '283', # A/V Bridge
+        '297', # USB Self-Service Camera and Audio Feed
+    )),
+);
+
 array_multisort(array_column($features, 'category'), SORT_ASC, SORT_NATURAL,
                 array_column($features, 'display_name'), SORT_ASC, SORT_NATURAL,
                 $features);
