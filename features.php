@@ -38,18 +38,11 @@ array_multisort(array_column($features, 'category'), SORT_ASC, SORT_NATURAL,
 
 dprint_r($features, true);
 
-echo json_encode($features);
-
 if (! isset($_GET['debug']))
-    exit();
+    exit(json_encode($features));
 
 ?>
-<br clear="all" />
+<form method="POST"><input type="submit" name="update_cache" value="Reload Cached Entries" /></form>
+<pre><?= htmlentities(json_encode($features, JSON_PRETTY_PRINT)) ?></pre>
 <hr />
-<pre style="text-align: left; color: black; background-color: white">
-<?= $debug_output ?>
-</pre>
-
-<form method="POST">
- <input type="submit" name="update_cache" value="Reload Cached Entries" />
-</form>
+<pre><?= $debug_output ?></pre>
