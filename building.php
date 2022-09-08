@@ -78,6 +78,8 @@ if (count($spaces)) {
 
         $room = $building_code . ' ' . $number;
 
+        if ($room == 'FTR 034') { continue; } // not managed by AT
+
         foreach($space->feature as $featureObj) {
             $feature = array_merge((array)$featureObj, r25_decode_feature_name((string)$featureObj->feature_name));
             if ($feature['category'] == 'Hidden')
