@@ -33,7 +33,7 @@ foreach ($spaces as $space) {
 
 // Add meta-features
 $features[] = array(
-    'category'      => 'AV',
+    // 'category'      => 'AV',
     'display_name'  => 'Lecture Capture',
     'feature_id'    => implode('+', array(
         '282', # Automated Panopto Recorder
