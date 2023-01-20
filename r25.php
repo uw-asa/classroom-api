@@ -3,7 +3,7 @@
 require "/usr/local/etc/r25/config.php";
 
 
-function r25_get($r25_table, $r25_query, $timeout=2880)
+function r25_get($r25_table, $r25_query, $timeout=0)
 {
     global $r25_baseurl, $r25_username, $r25_password;
 
