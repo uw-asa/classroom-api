@@ -128,6 +128,13 @@ foreach (array_keys($results['attribute_list']) as $category) {
     });
 }
 
+switch ($results['building_code']) {
+case 'MGH':
+case 'SMI':
+    $results['service_urls']['Calendar*'] = "https://25live.collegenet.com/pro/washington#!/home/location/{$roomInfo25->space_id}/calendar";
+    break;
+}
+
 $instructions_pdf = sprintf("%s_%s_instructions.pdf", $results['building_code'], $results['room_number']);
 if (is_file("$image_dir/instructions/$instructions_pdf") &&
     is_readable("$image_dir/instructions/$instructions_pdf"))
