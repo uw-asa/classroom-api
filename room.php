@@ -142,6 +142,9 @@ case 'MGH 030':
 case 'MGH 044':
     $results['service_urls']['Computer specifications'] = 'https://itconnect.uw.edu/learn/technology-spaces/mgh-044-computer-classroom/mgh-030-and-mgh-044-software-and-hardware-list/';
     break;
+case 'PAR 220':
+    // not reservable through Event Services
+    $results['service_urls']['Special event request'] = null;
 default:
     break;
 }
