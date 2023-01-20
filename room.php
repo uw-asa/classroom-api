@@ -45,7 +45,7 @@ $results['room_number'] = $number;
 $results['price_group'] = '';
 $results['room_notes'] = '';
 
-$number = r25_canonicalize_room_number($number);
+#$number = r25_canonicalize_room_number($number);
 
 # New static locations for media files
 $pdf = sprintf("%s_%s_schematic.pdf", $building, $number);
