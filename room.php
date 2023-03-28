@@ -39,8 +39,7 @@ dprint(print_r($roomInfo25, true));
 if (!is_numeric($roomInfo25->space_id)) {
     header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
     include('error/404.php');
-    if (! isset($_GET['debug']))
-        goto RoomExit;
+    goto RoomExit;
 }
 
 $nameInfo = r25_decode_formal_name((string)$roomInfo25->formal_name);
@@ -94,8 +93,7 @@ if (isset($_GET['meta'])) {
   header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
 
   include('error/404.php');
-  if (! isset($_GET['debug']))
-      goto RoomExit;
+  goto RoomExit;
 }
 
 
@@ -156,8 +154,7 @@ case 'FTR 034':
     // Not a generally-assignable room
     header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
     include('error/404.php');
-    if (! isset($_GET['debug']))
-        goto RoomExit;
+    goto RoomExit;
 case 'MGH 030':
 case 'MGH 044':
     $results['service_urls']['Computer specifications'] = 'https://itconnect.uw.edu/learn/technology-spaces/mgh-044-computer-classroom/mgh-030-and-mgh-044-software-and-hardware-list/';
