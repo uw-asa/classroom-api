@@ -152,6 +152,12 @@ if (is_file("$image_dir/instructions/$instructions_pdf") &&
 $results['service_urls']['Report a problem'] = "https://academictechnologies.asa.uw.edu/room-problem/?building={$results['building_code']}&room_number={$results['room_number']}";
 
 switch ("{$results['building_code']} {$results['room_number']}") {
+case 'FTR 034':
+    // Not a generally-assignable room
+    header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+    include('error/404.php');
+    if (! isset($_GET['debug']))
+        goto RoomExit;
 case 'MGH 030':
 case 'MGH 044':
     $results['service_urls']['Computer specifications'] = 'https://itconnect.uw.edu/learn/technology-spaces/mgh-044-computer-classroom/mgh-030-and-mgh-044-software-and-hardware-list/';
