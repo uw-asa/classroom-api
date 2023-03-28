@@ -36,6 +36,13 @@ $short_name = $building . ' ' . $number;
 $roomInfo25 = r25_get_space_by_short_name($short_name);
 dprint(print_r($roomInfo25, true));
 
+if (!is_numeric($roomInfo25->space_id)) {
+    header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+    include('error/404.php');
+    if (! isset($_GET['debug']))
+        goto RoomExit;
+}
+
 $nameInfo = r25_decode_formal_name((string)$roomInfo25->formal_name);
 
 $results['building_code'] = $building;
