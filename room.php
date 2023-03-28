@@ -36,7 +36,7 @@ $short_name = $building . ' ' . $number;
 $roomInfo25 = r25_get_space_by_short_name($short_name);
 dprint(print_r($roomInfo25, true));
 
-if (!is_numeric($roomInfo25->space_id)) {
+if (!is_numeric((string)$roomInfo25->space_id)) {
     header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
     include('error/404.php');
     goto RoomExit;
