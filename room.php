@@ -26,7 +26,7 @@ if (isset($_GET['room'])) {
 } else {
     header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
     include('error/404.php');
-    exit();
+    goto RoomExit;
 }    
 
 if ($building == 'EE1' || $building == 'EEB' || $building == 'ECE')
@@ -87,8 +87,8 @@ if (isset($_GET['meta'])) {
   header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
 
   include('error/404.php');
-
-  exit();
+  if (! isset($_GET['debug']))
+      goto RoomExit;
 }
 
 
@@ -175,6 +175,7 @@ default:
     break;
 }
 
+RoomExit:
 if (! isset($_GET['debug']))
     exit(json_encode($results));
 
