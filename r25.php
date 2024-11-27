@@ -35,6 +35,11 @@ function r25_get_space_by_short_name($short_name)
 }
 
 
+function slugify($string) {
+    $string = mb_strtolower($string);
+    $string = preg_replace('/[\W_]+/', '-', $string);
+    return $string;
+} 
 
 
 function r25_decode_feature_name($longname)
@@ -84,7 +89,9 @@ function r25_decode_feature_name($longname)
     }
 
     return array('category' => $category,
-                 'display_name' => $display_name);
+                 'display_name' => $display_name,
+                 'slug' => slugify($display_name),
+                );
 }
 
 function r25_decode_formal_name($longname)

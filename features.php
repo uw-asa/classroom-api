@@ -35,6 +35,7 @@ foreach ($spaces as $space) {
 $features[] = array(
     // 'category'      => 'AV',
     'display_name'  => 'Lecture Capture',
+    'slug'          => 'lecture-capture',
     'feature_id'    => implode('+', array(
         '282', # Automated Panopto Recorder
         '283', # A/V Bridge
