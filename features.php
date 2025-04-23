@@ -33,7 +33,7 @@ foreach ($spaces as $space) {
 
 // Add meta-features
 $features[] = array(
-    // 'category'      => 'AV',
+    'category'      => '',
     'display_name'  => 'Lecture Capture',
     'slug'          => 'lecture-capture',
     'feature_id'    => implode('+', array(
